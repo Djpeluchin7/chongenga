@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú del Restaurante</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-800 pb-24">
+
+    <!-- Header / Banner del Restaurante -->
+    <div class="relative h-48 bg-gray-300">
+        <img id="resto-banner" src="" alt="Banner" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white">
+            <div>
+                <a href="index.html" class="text-xs bg-white/20 hover:bg-white/30 backdrop-blur-md px-3 py-1 rounded-full mb-2 inline-block transition"><i class="fa-solid fa-arrow-left mr-1"></i> Volver al Food Court</a>
+                <h1 id="resto-nombre" class="text-2xl font-black">Cargando...</h1>
+                <p id="resto-categoria" class="text-xs text-gray-200">...</p>
+            </div>
+            <span id="resto-estado" class="text-xs font-bold px-3 py-1.5 rounded-full bg-white/90 text-gray-800">Cargando...</span>
+        </div>
+    </div>
+
+    <!-- Contenido: Productos -->
+    <main class="max-w-4xl mx-auto px-4 py-6">
+        <h2 class="text-lg font-bold mb-4">Menú Disponible</h2>
+        <div id="productos-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Los productos se inyectan dinámicamente aquí -->
+        </div>
+    </main>
+
+    <!-- Carrito Flotante (Bottom Bar) -->
+    <div id="cart-bar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg hidden z-40">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <div>
+                <span id="cart-count" class="text-xs font-bold bg-red-600 text-white px-2 py-0.5 rounded-full">0</span>
+                <span class="text-sm font-semibold ml-2">Total: $<span id="cart-total">0.00</span></span>
+            </div>
+            <button onclick="enviarPedidoWhatsApp()" class="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition flex items-center shadow-md">
+                <i class="fa-brands fa-whatsapp text-lg mr-2"></i> Pedir por WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Script de Firebase y Lógica del Menú -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+           apiKey: "AIzaSyBN4j8ETJJL35g3EcJhqq3vj62i8pgPe1U",
+           authDomain: "foody-649c5.firebaseapp.com",
+           projectId: "foody-649c5",
+           storageBucket: "foody-649c5.firebasestorage.app",
+           messagingSenderId: "612340344528",
+           appId: "1:612340344528:web:18ba2dd5375ef9759520d5",
+           measurementId: "G-1RKGJEEC7Z"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Obtener el ID de la tienda desde la URL (?id=...)
+        const urlParams = new URLSearchParams(window.location.search);
+        const restauranteId = urlParams.get('id');
+
+        let restauranteData = {};
+        let carrito = [];
+
+        async function inicializarRestaurante() {
+            if (!restauranteId) {
+                alert("Restaurante no especificado");
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                // 1. Cargar info del restaurante
+                const restoDoc = await getDoc(doc(db, "restaurantes", restauranteId));
+                if (!restoDoc.exists()) {
+                    alert("El restaurante no existe");
+                    window.location.href = 'index.html';
+                    return;
+                }
+                restauranteData = restoDoc.data();
+
+                document.getElementById('resto-nombre').innerText = restauranteData.nombre;
+                document.getElementById('resto-categoria').innerText = restauranteData.categoria || 'Comida Variada';
+                document.getElementById('resto-banner').src = restauranteData.banner || 'https://via.placeholder.com/800x300';
+                
+                const estadoEl = document.getElementById('resto-estado');
+                estadoEl.innerText = restauranteData.abierto ? '● Abierto' : '● Cerrado';
+                estadoEl.className = `text-xs font-bold px-3 py-1.5 rounded-full ${restauranteData.abierto ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`;
+
+                // 2. Cargar productos que correspondan a este restauranteId
+                const q = query(collection(db, "productos"), where("restauranteId", "==", restauranteId));
+                const querySnapshot = await getDocs(q);
+                
+                const grid = document.getElementById('productos-grid');
+                grid.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    grid.innerHTML = `<p class="col-span-full text-center text-gray-400 py-10">Este restaurante aún no tiene productos cargados.</p>`;
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const prod = docSnap.data();
+                    const prodId = docSnap.id;
+                    const nombreLimpio = prod.nombre.replace(/'/g, "");
+
+                    grid.innerHTML += `
+                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex gap-4 items-center">
+                            <img src="${prod.imagen || 'https://via.placeholder.com/150'}" class="w-20 h-20 object-cover rounded-xl bg-gray-100 flex-shrink-0">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-gray-900">${prod.nombre}</h3>
+                                <p class="text-xs text-gray-500 line-clamp-2 mb-2">${prod.descripcion || ''}</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="font-black text-gray-950">$${parseFloat(prod.precio).toFixed(2)}</span>
+                                    <button onclick="agregarAlCarrito('${prodId}', '${nombreLimpio}', ${prod.precio})" class="bg-gray-900 hover:bg-gray-800 text-white text-xs px-3 py-1.5 rounded-lg transition font-semibold">
+                                        + Agregar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+            } catch (error) {
+                console.error("Error al cargar datos:", error);
+            }
+        }
+
+        // Funciones globales de carrito accesibles desde el HTML renderizado
+        window.agregarAlCarrito = function(id, nombre, precio) {
+            const index = carrito.findIndex(item => item.id === id);
+            if (index > -1) {
+                carrito[index].cantidad += 1;
+            } else {
+                carrito.push({ id, nombre, precio, cantidad: 1 });
+            }
+            actualizarCarritoUI();
+        }
+
+        function actualizarCarritoUI() {
+            // CORREGIDO: Se calcula limpiamente el total de elementos y el subtotal
+            const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            const totalPrice = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+
+            document.getElementById('cart-count').innerText = totalItems;
+            document.getElementById('cart-total').innerText = totalPrice.toFixed(2);
+
+            const cartBar = document.getElementById('cart-bar');
+            if (totalItems > 0) {
+                cartBar.classList.remove('hidden');
+            } else {
+                cartBar.classList.add('hidden');
+            }
+        }
+
+        window.enviarPedidoWhatsApp = function() {
+            if (!restauranteData.whatsapp) {
+                alert("Este restaurante no configuró un número de WhatsApp.");
+                return;
+            }
+
+            let mensaje = `*¡Hola! Nuevo pedido desde FoodCourt:* %0A%0A`;
+            let total = 0;
+
+            carrito.forEach(item => {
+                let subtotal = item.precio * item.cantidad;
+                total += subtotal;
+                mensaje += `• ${item.cantidad}x ${item.nombre} - $${subtotal.toFixed(2)}%0A`;
+            });
+
+            mensaje += `%0A*Total a pagar: $${total.toFixed(2)}*`;
+
+            // Limpiar formato de teléfono (remover espacios o guiones si los hay)
+            const tel = restauranteData.whatsapp.replace(/\D/g, '');
+            window.open(`https://wa.me/${tel}?text=${mensaje}`, '_blank');
+        }
+
+        inicializarRestaurante();
+    </script>
+</body>
+</html>

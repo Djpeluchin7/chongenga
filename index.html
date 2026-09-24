@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Court Central</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-black text-red-600 tracking-tight">🍔 Chon<span class="text-gray-800">genga🛵</span></h1>
+          
+        </div>
+    </header>
+
+    <!-- Contenido Principal: Listado de Restaurantes -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="mb-6">
+            <h2 class="text-xl font-bold">Restaurantes Disponibles</h2>
+            <p class="text-sm text-gray-500">Elige tu favorito y haz tu pedido directo por WhatsApp</p>
+        </div>
+
+        <!-- Grid de Boxes de Restaurantes (Aquí se inyectan dinámicamente) -->
+        <div id="restaurants-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Skeleton de carga inicial -->
+            <div class="animate-pulse bg-white rounded-2xl h-64 shadow-sm"></div>
+            <div class="animate-pulse bg-white rounded-2xl h-64 shadow-sm"></div>
+        </div>
+    </main>
+
+    <!-- Script de Firebase y Lógica -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Configura tus credenciales de Firebase aquí
+        const firebaseConfig = {
+            apiKey: "AIzaSyBN4j8ETJJL35g3EcJhqq3vj62i8pgPe1U",
+  authDomain: "foody-649c5.firebaseapp.com",
+  projectId: "foody-649c5",
+  storageBucket: "foody-649c5.firebasestorage.app",
+  messagingSenderId: "612340344528",
+  appId: "1:612340344528:web:18ba2dd5375ef9759520d5",
+  measurementId: "G-1RKGJEEC7Z"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function cargarRestaurantes() {
+            const grid = document.getElementById('restaurants-grid');
+            grid.innerHTML = ''; // Limpiar loader
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "restaurantes"));
+                
+                if(querySnapshot.empty) {
+                    grid.innerHTML = `<p class="col-span-full text-center text-gray-500 py-10">No hay restaurantes registrados aún.</p>`;
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const resto = docSnap.data();
+                    const restoId = docSnap.id;
+
+                    // Pintar la Box del Restaurante tipo UberEats
+                    const card = `
+                        <div onclick="window.location.href='menu.html?id=${restoId}'" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer border border-gray-100 flex flex-col">
+                            <div class="relative h-36 bg-gray-200">
+                                <img src="${resto.banner || 'https://via.placeholder.com/400x200'}" alt="${resto.nombre}" class="w-full h-full object-cover">
+                                <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-xs font-bold px-2.5 py-1 rounded-full shadow-sm ${resto.abierto ? 'text-green-600' : 'text-red-500'}">
+                                    ${resto.abierto ? '● Abierto' : '● Cerrado'}
+                                </span>
+                            </div>
+                            <div class="p-4 flex flex-col flex-grow justify-between">
+                                <div>
+                                    <h3 class="font-bold text-lg text-gray-900">${resto.nombre}</h3>
+                                    <p class="text-xs text-gray-500 mb-2">${resto.categoria || 'Comida Variada'}</p>
+                                </div>
+                                <div class="flex items-center justify-between pt-2 border-t border-gray-50 text-xs font-semibold">
+                                    <div class="flex items-center text-amber-500">
+                                        <i class="fa-solid fa-star mr-1"></i>
+                                        <span>${resto.rating || '5.0'}</span>
+                                    </div>
+                                    <span class="text-gray-400 font-normal">30-45 min</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    grid.innerHTML += card;
+                });
+            } catch (error) {
+                console.error("Error al cargar restaurantes:", error);
+            }
+        }
+
+        // Ejecutar al cargar la página
+        cargarRestaurantes();
+    </script>
+</body>
+</html>
