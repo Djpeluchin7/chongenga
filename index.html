@@ -34,72 +34,7 @@
 
     <!-- Script de Firebase y Lógica -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        // Configura tus credenciales de Firebase aquí
-        const firebaseConfig = {
-            apiKey: "AIzaSyBN4j8ETJJL35g3EcJhqq3vj62i8pgPe1U",
-  authDomain: "foody-649c5.firebaseapp.com",
-  projectId: "foody-649c5",
-  storageBucket: "foody-649c5.firebasestorage.app",
-  messagingSenderId: "612340344528",
-  appId: "1:612340344528:web:18ba2dd5375ef9759520d5",
-  measurementId: "G-1RKGJEEC7Z"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        async function cargarRestaurantes() {
-            const grid = document.getElementById('restaurants-grid');
-            grid.innerHTML = ''; // Limpiar loader
-
-            try {
-                const querySnapshot = await getDocs(collection(db, "restaurantes"));
-                
-                if(querySnapshot.empty) {
-                    grid.innerHTML = `<p class="col-span-full text-center text-gray-500 py-10">No hay restaurantes registrados aún.</p>`;
-                    return;
-                }
-
-                querySnapshot.forEach((docSnap) => {
-                    const resto = docSnap.data();
-                    const restoId = docSnap.id;
-
-                    // Pintar la Box del Restaurante tipo UberEats
-                    const card = `
-                        <div onclick="window.location.href='menu.html?id=${restoId}'" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer border border-gray-100 flex flex-col">
-                            <div class="relative h-36 bg-gray-200">
-                                <img src="${resto.banner || 'https://via.placeholder.com/400x200'}" alt="${resto.nombre}" class="w-full h-full object-cover">
-                                <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-xs font-bold px-2.5 py-1 rounded-full shadow-sm ${resto.abierto ? 'text-green-600' : 'text-red-500'}">
-                                    ${resto.abierto ? '● Abierto' : '● Cerrado'}
-                                </span>
-                            </div>
-                            <div class="p-4 flex flex-col flex-grow justify-between">
-                                <div>
-                                    <h3 class="font-bold text-lg text-gray-900">${resto.nombre}</h3>
-                                    <p class="text-xs text-gray-500 mb-2">${resto.categoria || 'Comida Variada'}</p>
-                                </div>
-                                <div class="flex items-center justify-between pt-2 border-t border-gray-50 text-xs font-semibold">
-                                    <div class="flex items-center text-amber-500">
-                                        <i class="fa-solid fa-star mr-1"></i>
-                                        <span>${resto.rating || '5.0'}</span>
-                                    </div>
-                                    <span class="text-gray-400 font-normal">30-45 min</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    grid.innerHTML += card;
-                });
-            } catch (error) {
-                console.error("Error al cargar restaurantes:", error);
-            }
-        }
-
-        // Ejecutar al cargar la página
-        cargarRestaurantes();
+      function _0x44d5(){const _0x43b4b3=['data','Comida\x20Var','365561Hwhrjk','EfBff','s=\x22absolut','aurantes:','></i>\x0a\x20\x20\x20\x20','G-1RKGJEEC','col-span-f','3063424qCZeyt','\x20\x20\x20\x20\x20\x20\x20<sp','der-t\x20bord','r-500\x22>\x0a\x20\x20','mg\x20src=\x22','nombre','rantes\x20reg','\x20</div>\x0a\x20\x20','-full\x20h-fu','●\x20Abierto','restaurant','<span\x20clas','\x22>\x0a\x20\x20\x20\x20\x20\x20\x20','iv>\x0a\x20\x20\x20\x20\x20\x20','forEach','\x20\x20\x20\x20\x20\x20\x20\x20\x20<','2qvJUVW','ull\x20text-c','abierto','r-sm\x20text-','enter\x20just','gFymy','getElement','ún.</p>','\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','\x22\x20class=\x22w','\x20\x20\x20\x20\x20\x20\x20</d','banner','\x20\x20\x20\x20\x20<div\x20','an>\x0a\x20\x20\x20\x20\x20\x20','er-gray-50','t-bold\x20tex','y-between\x22','ems-center','ll\x20object-','empty','ounded-2xl','py-10\x22>No\x20','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20','200\x22>\x0a\x20\x20\x20\x20','AIzaSyBN4j','an\x20class=\x22','adow-sm\x20','der.com/40','hay\x20restau','3474cNjcUX','\x20\x20</div>\x0a\x20','4744CxEoQG','\x20\x20\x20</span>','\x20text-xs\x20f','500\x20mb-2\x22>','400\x20font-n','istrados\x20a','tmKfu','</span>\x0a\x20\x20','-solid\x20fa-','5.firebase','\x22\x20alt=\x22','hite/90\x20ba','wpokL','\x20\x20\x20\x20\x20\x20<spa','order\x20bord','0x200','\x20\x20\x20\x20\x20\x20<div','star\x20mr-1\x22','er-gray-10','Error\x20al\x20c','\x20\x20\x20\x20\x20\x20</di','enter\x20text','\x20\x20\x20\x20<div>\x0a','https://vi','xHqsa','iada','py-1\x20round','xs\x20font-bo','4528:web:1','a.placehol','ex\x20items-c','lative\x20h-3','6123403445','rating','-pointer\x20b','gray-900\x22>','?id=','45\x20min</sp','>\x0a\x20\x20\x20\x20\x20\x20\x20\x20','\x20text-ambe','tion.href=','\x20\x20\x20\x20<div\x20c','class=\x22fon','x-col\x22>\x0a\x20\x20','ify-betwee','YrgvE','foody-649c','8ETJJL35g3','md\x20transit','s=\x22flex\x20it','\x20class=\x22fa','text-green','849816gtOIWx','ById','ef9759520d','categoria','nTeFJ','storage.ap','hidden\x20sha','●\x20Cerrado','jLSgs','error','=\x22text-xs\x20','ckdrop-blu','</p>\x0a\x20\x20\x20\x20\x20','\x20\x20\x20\x20\x20\x20\x20\x20\x20','ght-3\x20bg-w','\x20\x20<p\x20class','0\x20flex\x20fle','677136NzLWIC','5.0','indow.loca','xIayF','ed-full\x20sh','ld\x22>\x0a\x20\x20\x20\x20\x20','\x20\x20\x20\x20\x20\x20\x20\x20<i','t-lg\x20text-','lass=\x22p-4\x20','er:shadow-','n\x20pt-2\x20bor','<p\x20class=\x22','\x27menu.html','dow-sm\x20hov','text-red-5','laJXu','text-gray-','\x20\x20\x20\x20\x20\x20<h3\x20','app.com','2i8pgPe1U','innerHTML','argar\x20rest','EcJhqq3vj6','\x20class=\x22fl','3658360KMzxEI','flex\x20flex-','col\x20flex-g','\x20overflow-','6\x20bg-gray-','ormal\x22>30-','788648nUnkjo','\x20\x20\x20\x20</div>','\x27\x22\x20class=\x22','tltOB','e\x20top-3\x20ri','5OOJBPU','ld\x20px-2.5\x20','\x20class=\x22re','v>\x0a\x20\x20\x20\x20\x20\x20\x20','-600','-gray-500\x20','cover\x22>\x0a\x20\x20','row\x20justif','bg-white\x20r','s-grid','8ba2dd5375','onclick=\x22w','1:61234034','zrSvo','ont-semibo','ion\x20cursor','\x20<div\x20clas','/div>\x0a\x20\x20\x20\x20','</h3>\x0a\x20\x20\x20\x20'];_0x44d5=function(){return _0x43b4b3;};return _0x44d5();}const _0x1e5310=_0x19d0;(function(_0x3c46cd,_0x32ee61){const _0x2bbae5=_0x19d0,_0x380fff=_0x3c46cd();while(!![]){try{const _0x222f55=-parseInt(_0x2bbae5(0x113))/(0x1292+0xe1d+-0xb2*0x2f)*(parseInt(_0x2bbae5(0x12a))/(0x171+-0x8f7+-0x8*-0xf1))+parseInt(_0x2bbae5(0x17d))/(0x12fa+-0x1d3*0x5+-0x9d8)+parseInt(_0x2bbae5(0x1ac))/(0xe1e+0x97*-0x1+-0xd83)*(parseInt(_0x2bbae5(0x1b1))/(-0x229+0x1af7+-0x18c9))+-parseInt(_0x2bbae5(0x18e))/(-0x3*-0x389+0x199*-0x6+0x5*-0x33)+parseInt(_0x2bbae5(0x11a))/(-0xd40*0x1+-0x53+0x2*0x6cd)+parseInt(_0x2bbae5(0x149))/(0x1157+-0xc71+-0x26f*0x2)*(parseInt(_0x2bbae5(0x147))/(0x1*-0x1c01+0x11a3+0xa67))+-parseInt(_0x2bbae5(0x1a6))/(-0xfd9+0x2f1*0xc+-0x1369);if(_0x222f55===_0x32ee61)break;else _0x380fff['push'](_0x380fff['shift']());}catch(_0x5774c5){_0x380fff['push'](_0x380fff['shift']());}}}(_0x44d5,0x56bd+-0x1*0x90151+0x7547*0x1d));import{initializeApp}from'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';import{getFirestore,collection,getDocs}from'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';const firebaseConfig={'apiKey':_0x1e5310(0x142)+_0x1e5310(0x178)+_0x1e5310(0x1a4)+_0x1e5310(0x1a1),'authDomain':_0x1e5310(0x177)+_0x1e5310(0x152)+_0x1e5310(0x1a0),'projectId':_0x1e5310(0x177)+'5','storageBucket':_0x1e5310(0x177)+_0x1e5310(0x152)+_0x1e5310(0x182)+'p','messagingSenderId':_0x1e5310(0x169)+'28','appId':_0x1e5310(0x10a)+_0x1e5310(0x165)+_0x1e5310(0x108)+_0x1e5310(0x17f)+'5','measurementId':_0x1e5310(0x118)+'7Z'},app=initializeApp(firebaseConfig),db=getFirestore(app);function _0x19d0(_0x2bfccd,_0x259bc1){_0x2bfccd=_0x2bfccd-(-0x2a*0x89+0xbe5+0x3df*0x3);const _0x37f887=_0x44d5();let _0x3fbd4=_0x37f887[_0x2bfccd];return _0x3fbd4;}async function cargarRestaurantes(){const _0x17b86a=_0x1e5310,_0x36cbcd={'zrSvo':_0x17b86a(0x160)+_0x17b86a(0x166)+_0x17b86a(0x145)+_0x17b86a(0x158),'nTeFJ':_0x17b86a(0x17c)+_0x17b86a(0x1b5),'wpokL':_0x17b86a(0x19c)+'00','jLSgs':_0x17b86a(0x123),'gFymy':_0x17b86a(0x184),'tmKfu':_0x17b86a(0x112)+_0x17b86a(0x162),'laJXu':_0x17b86a(0x18f),'EfBff':_0x17b86a(0x124)+_0x17b86a(0x1ba),'tltOB':function(_0x719549,_0xbc09a0){return _0x719549(_0xbc09a0);},'xIayF':function(_0x34bd17,_0x3d12da,_0x1a65ae){return _0x34bd17(_0x3d12da,_0x1a65ae);},'YrgvE':_0x17b86a(0x124)+'es','xHqsa':_0x17b86a(0x15c)+_0x17b86a(0x1a3)+_0x17b86a(0x116)},_0x4a5118=document[_0x17b86a(0x130)+_0x17b86a(0x17e)](_0x36cbcd[_0x17b86a(0x114)]);_0x4a5118[_0x17b86a(0x1a2)]='';try{const _0xa939d6=await _0x36cbcd[_0x17b86a(0x1af)](getDocs,_0x36cbcd[_0x17b86a(0x191)](collection,db,_0x36cbcd[_0x17b86a(0x176)]));if(_0xa939d6[_0x17b86a(0x13d)]){_0x4a5118[_0x17b86a(0x1a2)]=_0x17b86a(0x199)+_0x17b86a(0x119)+_0x17b86a(0x12b)+_0x17b86a(0x15e)+_0x17b86a(0x1b6)+_0x17b86a(0x13f)+_0x17b86a(0x146)+_0x17b86a(0x120)+_0x17b86a(0x14e)+_0x17b86a(0x131);return;}_0xa939d6[_0x17b86a(0x128)](_0x99750f=>{const _0x3074b5=_0x17b86a,_0xcbb8df=_0x99750f[_0x3074b5(0x111)](),_0x38c956=_0x99750f['id'],_0xf28ca8=_0x3074b5(0x140)+_0x3074b5(0x132)+_0x3074b5(0x136)+_0x3074b5(0x109)+_0x3074b5(0x190)+_0x3074b5(0x171)+_0x3074b5(0x19a)+_0x3074b5(0x16d)+_0x38c956+(_0x3074b5(0x1ae)+_0x3074b5(0x1b9)+_0x3074b5(0x13e)+_0x3074b5(0x1a9)+_0x3074b5(0x183)+_0x3074b5(0x19b)+_0x3074b5(0x197)+_0x3074b5(0x179)+_0x3074b5(0x10d)+_0x3074b5(0x16b)+_0x3074b5(0x157)+_0x3074b5(0x15b)+_0x3074b5(0x18d)+_0x3074b5(0x174)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x159)+_0x3074b5(0x1b3)+_0x3074b5(0x168)+_0x3074b5(0x1aa)+_0x3074b5(0x141)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x194)+_0x3074b5(0x11e))+(_0xcbb8df[_0x3074b5(0x135)]||_0x36cbcd[_0x3074b5(0x10b)])+_0x3074b5(0x153)+_0xcbb8df[_0x3074b5(0x11f)]+(_0x3074b5(0x133)+_0x3074b5(0x122)+_0x3074b5(0x13c)+_0x3074b5(0x1b7)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x125)+_0x3074b5(0x115)+_0x3074b5(0x1b0)+_0x3074b5(0x18b)+_0x3074b5(0x154)+_0x3074b5(0x188)+_0x3074b5(0x12d)+_0x3074b5(0x164)+_0x3074b5(0x1b2)+_0x3074b5(0x163)+_0x3074b5(0x192)+_0x3074b5(0x144))+(_0xcbb8df[_0x3074b5(0x12c)]?_0x36cbcd[_0x3074b5(0x181)]:_0x36cbcd[_0x3074b5(0x155)])+(_0x3074b5(0x126)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x18a))+(_0xcbb8df[_0x3074b5(0x12c)]?_0x36cbcd[_0x3074b5(0x185)]:_0x36cbcd[_0x3074b5(0x12f)])+(_0x3074b5(0x140)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x14a)+_0x3074b5(0x140)+_0x3074b5(0x132)+_0x3074b5(0x129)+_0x3074b5(0x10f)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x172)+_0x3074b5(0x196)+_0x3074b5(0x1a7)+_0x3074b5(0x1a8)+_0x3074b5(0x1b8)+_0x3074b5(0x13a)+_0x3074b5(0x16f)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x15f)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x19f)+_0x3074b5(0x173)+_0x3074b5(0x139)+_0x3074b5(0x195)+_0x3074b5(0x16c))+_0xcbb8df[_0x3074b5(0x11f)]+(_0x3074b5(0x110)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x18c)+_0x3074b5(0x187)+_0x3074b5(0x19e)+_0x3074b5(0x14c))+(_0xcbb8df[_0x3074b5(0x180)]||_0x36cbcd[_0x3074b5(0x14f)])+(_0x3074b5(0x189)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x134)+_0x3074b5(0x127)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x159)+_0x3074b5(0x1a5)+_0x3074b5(0x167)+_0x3074b5(0x12e)+_0x3074b5(0x175)+_0x3074b5(0x198)+_0x3074b5(0x11c)+_0x3074b5(0x138)+_0x3074b5(0x14b)+_0x3074b5(0x10c)+_0x3074b5(0x193)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x10e)+_0x3074b5(0x17a)+_0x3074b5(0x13b)+_0x3074b5(0x170)+_0x3074b5(0x11d)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x194)+_0x3074b5(0x17b)+_0x3074b5(0x151)+_0x3074b5(0x15a)+_0x3074b5(0x117)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x156)+'n>')+(_0xcbb8df[_0x3074b5(0x16a)]||_0x36cbcd[_0x3074b5(0x19d)])+(_0x3074b5(0x150)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x1ad)+_0x3074b5(0x140)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x11b)+_0x3074b5(0x143)+_0x3074b5(0x19e)+_0x3074b5(0x14d)+_0x3074b5(0x1ab)+_0x3074b5(0x16e)+_0x3074b5(0x137)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x15d)+_0x3074b5(0x1b4)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x121)+_0x3074b5(0x132)+_0x3074b5(0x132)+_0x3074b5(0x148)+_0x3074b5(0x132)+_0x3074b5(0x18a));_0x4a5118[_0x3074b5(0x1a2)]+=_0xf28ca8;});}catch(_0x43520c){console[_0x17b86a(0x186)](_0x36cbcd[_0x17b86a(0x161)],_0x43520c);}}cargarRestaurantes();
     </script>
 </body>
 </html>
